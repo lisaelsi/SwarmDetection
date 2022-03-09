@@ -114,11 +114,11 @@ def swarm_detection(hive_temp, three_day_temp_diff, nine_day_temp_diff, weight_d
         label = 1
 
     # TODO - vad göra om temperaturen endast varit konstant i tre dagar?
-    #if is_clear_weather(weather_json_response) and temp_constant(temp_3) and weight_not_constant(
-            #weight_diff) and is_summer(month) and within_temp_range(temp):
-        #if random.uniform(0, 1) > 0.5:
-        # swarm_now: 2
-        #    label = 2
+    # if is_clear_weather(weather_json_response) and temp_constant(temp_3) and weight_not_constant(
+    # weight_diff) and is_summer(month) and within_temp_range(temp):
+    # if random.uniform(0, 1) > 0.5:
+    # swarm_now: 2
+    #    label = 2
 
     # TODO - fix
     if is_clear_weather(weather_json_response) and temp_constant(nine_day_temp_diff) and weight_not_constant(
@@ -141,14 +141,18 @@ def create_file(path, data):
 
 def create_row(todays_date, weather_data, weight_data, temp_data):
     w = get_weather_data(weather_data)
-    current_temp, temp_diff_3_day, temp_diff_9_day = get_temp_data(temp_data)
-    weight_diff = get_weight_data(weight_data)
+    # current_temp, temp_diff_3_day, temp_diff_9_day = get_temp_data(temp_data)
+    # weight_diff = get_weight_data(weight_data)
+
+    current_temp, one_hour_diff_temp, three_day_diff_temp, nine_day_diff_temp = temp_data
+
+    one_hour_diff_weight, three_day_diff_weight, nine_day_diff_weight = weight_data
 
     month = extract_month(todays_date)
 
-    label = swarm_detection(current_temp, temp_diff_3_day, temp_diff_9_day, weight_diff, month)
+    label = swarm_detection(current_temp, three_day_diff_temp, nine_day_diff_temp, one_hour_diff_weight, month)
 
-    return [todays_date, current_temp, temp_diff_3_day, temp_diff_9_day, weight_diff, w, label]
+    return [todays_date, current_temp, three_day_diff_weight, nine_day_diff_weight, one_hour_diff_weight, w, label]
 
 
 f = open('data/weight_data_test.json')
@@ -169,11 +173,9 @@ for (date, values) in temp_data.items():
         temp.append(delta_temp_calculator(date, values[time], test_data=True))
         dates.append(f"{date}:{time}")
 
-
 all_data = []
 
 for i in range(500, 5000):
     all_data.append(create_row(dates[i], weather_json_response, weight[i], temp[i]))
 
 create_file(my_path, all_data)
-
