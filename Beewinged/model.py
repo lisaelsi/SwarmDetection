@@ -94,8 +94,8 @@ def swarm_detection(hive_temp, three_day_temp_diff, nine_day_temp_diff, weight_d
     return warning
 
 
-def main(weight_data, temp_data):
-    current_temp, one_hour_diff_temp, three_day_diff_temp, nine_day_diff_temp = delta_temp_calculator(temp_data)
+def main(weight_data, temp_data, temp_sensor):
+    current_temp, one_hour_diff_temp, three_day_diff_temp, nine_day_diff_temp = delta_temp_calculator(temp_data, temp_sensor)
     one_hour_diff_weight, three_day_diff_weight, nine_day_diff_weight = delta_weight_calculator(weight_data)
 
     warning = swarm_detection(current_temp, three_day_diff_temp, nine_day_diff_temp, one_hour_diff_weight)
